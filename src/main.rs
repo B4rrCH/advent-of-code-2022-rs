@@ -1,8 +1,10 @@
 mod day01;
 mod day02;
+mod day03;
 
 use crate::day01::run as run01;
 use crate::day02::run as run02;
+use crate::day03::run as run03;
 
 use std::{collections::VecDeque, env};
 
@@ -20,6 +22,7 @@ fn main() -> std::io::Result<()> {
     match day {
         Some(1) => run01(&args)?,
         Some(2) => run02(&args)?,
+        Some(3) => run03(&args)?,
         _ => println!("Please provide a day"),
     };
     Ok(())
