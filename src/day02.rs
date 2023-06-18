@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+use std::str::FromStr;
 
 #[derive(PartialEq, Clone, Copy)]
 enum Move {
@@ -14,14 +15,25 @@ enum Strategy {
     Outcome,
 }
 
+impl TryFrom<&String> for Strategy {
+    type Error = ();
+    fn try_from(s: &String) -> Result<Self, Self::Error> {
+        match s.as_str() {
+            "1" => Ok(Self::Answer),
+            "2" => Ok(Self::Outcome),
+            _ => Err(()),
+        }
+    }
+}
+
 pub fn run(args: &[String]) -> std::io::Result<()> {
     let file = File::open("input/day02.txt")?;
     let reader = BufReader::new(file);
 
-    let strategy = match args.get(0).map(|s| s.parse::<i32>()) {
-        Some(Ok(1)) => Strategy::Answer,
-        _ => Strategy::Outcome,
-    };
+    let strategy = args
+        .get(0)
+        .and_then(|s| s.try_into().ok())
+        .unwrap_or(Strategy::Answer);
 
     let score: i32 = reader
         .lines()
