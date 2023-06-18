@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::Read;
 
 pub fn run(args: &[String]) -> std::io::Result<()> {
-    let mut file = File::open("foo.txt")?;
+    let mut file = File::open("input/day06.txt")?;
     let mut input = vec![];
     file.read_to_end(&mut input)?;
 
