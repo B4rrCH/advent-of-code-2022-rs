@@ -15,7 +15,7 @@ fn get_item_in_both(str: String) -> Option<char> {
     str.chars().skip(l / 2).find(|&c| first_half.contains(&c))
 }
 
-fn get_value(c: char) -> Option<i32> {
+fn get_priority(c: char) -> Option<i32> {
     match c {
         'a'..='z' => Some(c as i32 - 'a' as i32 + 1),
         'A'..='Z' => Some(c as i32 - 'A' as i32 + 27),
@@ -31,7 +31,7 @@ fn run_part1(reader: BufReader<File>) -> std::io::Result<()> {
             _ => None,
         })
         .filter_map(get_item_in_both)
-        .filter_map(get_value)
+        .filter_map(get_priority)
         .sum();
 
     println!("The sum of priorities is {}", sum_of_priorities);
@@ -39,12 +39,9 @@ fn run_part1(reader: BufReader<File>) -> std::io::Result<()> {
 }
 
 fn run_part2(reader: BufReader<File>) -> std::io::Result<()> {
-    let sum = &reader
+    let sum: i32 = reader
         .lines()
-        .filter_map(|x| match x {
-            Ok(x) => Some(x),
-            _ => None,
-        })
+        .map_while(Result::ok)
         .chunks(3)
         .into_iter()
         .map(|chunk| {
@@ -52,10 +49,10 @@ fn run_part2(reader: BufReader<File>) -> std::io::Result<()> {
                 .map(|x| x.chars().collect::<HashSet<char>>())
                 .reduce(|a, b| a.intersection(&b).copied().collect::<HashSet<char>>())
                 .and_then(|s| s.into_iter().collect::<Vec<char>>().first().copied())
-                .and_then(get_value)
+                .and_then(get_priority)
                 .unwrap_or(0)
         })
-        .reduce(|a, b| a + b);
+        .sum();
 
     println!("Sum of priorities {:?}", sum);
     Ok(())
