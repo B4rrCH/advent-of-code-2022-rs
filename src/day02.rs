@@ -118,12 +118,8 @@ pub fn run(args: &[String]) -> std::io::Result<()> {
 
     let score = reader
         .lines()
-        .filter_map(|x| match x {
-            Ok(x) => Some(x),
-            _ => None,
-        })
-        .map(|s| parse(s, strategy))
-        .filter_map(|x| x)
+        .filter_map(Result::ok)
+        .filter_map(|s| parse(s, strategy))
         .fold(0, |p, g| p + points(g));
 
     println!("Scored: {}", score);
