@@ -19,7 +19,6 @@ fn main() -> std::io::Result<()> {
     let day = args.get(1).map(|s| s.parse::<i32>().unwrap_or(1));
 
     let args_for_day = &args[2..];
-    dbg!(day);
     match day {
         Some(1) => run01(args_for_day),
         Some(2) => run02(args_for_day),
