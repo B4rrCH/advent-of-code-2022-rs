@@ -15,12 +15,12 @@ enum Strategy {
     Outcome,
 }
 
-trait RPS {
+trait Rps {
     fn get_better(worse_move: Move) -> Move;
     fn get_worse(better_move: Move) -> Move;
 }
 
-impl RPS for Move {
+impl Rps for Move {
     fn get_better(worse_move: Move) -> Move {
         match worse_move {
             Move::Paper => Move::Scissors,
@@ -72,16 +72,20 @@ fn get_outcome(c: char, opponent: Option<Move>) -> Option<Move> {
 }
 
 fn parse(s: String, strategy: Strategy) -> Option<(Move, Move)> {
-    let opponent = match s.chars().nth(0) {
+    let mut chars = s.chars();
+    let opponent = match chars.next() {
         Some('A') => Some(Move::Rock),
         Some('B') => Some(Move::Paper),
         Some('C') => Some(Move::Scissors),
         _ => None,
     };
 
+    // Skip the space
+    _ = chars.next();
+
     let player = match strategy {
-        Strategy::Answer => s.chars().nth(2).map(parse_answer).flatten(),
-        Strategy::Outcome => s.chars().nth(2).map(|c| get_outcome(c, opponent)).flatten(),
+        Strategy::Answer => chars.next().and_then(parse_answer),
+        Strategy::Outcome => chars.next().and_then(|c| get_outcome(c, opponent)),
     };
 
     match (opponent, player) {
@@ -118,7 +122,7 @@ pub fn run(args: &[String]) -> std::io::Result<()> {
 
     let score = reader
         .lines()
-        .filter_map(Result::ok)
+        .map_while(Result::ok)
         .filter_map(|s| parse(s, strategy))
         .fold(0, |p, g| p + points(g));
 

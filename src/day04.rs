@@ -35,9 +35,8 @@ fn overlap(ranges: ((i32, i32), (i32, i32))) -> bool {
 fn run_part1(reader: BufReader<File>) -> std::io::Result<()> {
     let number_fully_contained = reader
         .lines()
-        .filter_map(Result::ok)
-        .map(parse_line)
-        .filter_map(|ranges| ranges)
+        .map_while(Result::ok)
+        .filter_map(parse_line)
         .map(either_fully_contained)
         .fold(0, |a, b| a + if b { 1 } else { 0 });
 
@@ -52,9 +51,8 @@ fn run_part1(reader: BufReader<File>) -> std::io::Result<()> {
 fn run_part2(reader: BufReader<File>) -> std::io::Result<()> {
     let number_fully_contained = reader
         .lines()
-        .filter_map(Result::ok)
-        .map(parse_line)
-        .filter_map(|ranges| ranges)
+        .map_while(Result::ok)
+        .filter_map(parse_line)
         .map(overlap)
         .fold(0, |a, b| a + if b { 1 } else { 0 });
 

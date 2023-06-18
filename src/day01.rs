@@ -9,44 +9,40 @@ pub fn run(args: &[String]) -> std::io::Result<()> {
     let file = File::open("input/day01.txt")?;
     let reader = BufReader::new(file);
 
-    let mut heap = BinaryHeap::new();
-    let n = args.get(0).map(|s| s.parse::<i32>());
+    let number_of_top_elves = args.get(0).and_then(|s| s.parse::<i32>().ok()).unwrap_or(1);
 
-    let x = match n {
-        Some(Ok(v)) => v,
-        _ => 1,
-    };
-
-    for _ in 0..x {
-        heap.push(Reverse(0));
+    let mut top_elves_calories = BinaryHeap::new();
+    for _ in 0..number_of_top_elves {
+        top_elves_calories.push(Reverse(0));
     }
 
     reader
         .lines()
-        .filter_map(|l| match l {
-            Ok(s) => Some(s),
-            _ => None,
-        })
-        .map(|s| s.parse::<i32>())
-        .fold(0, |elf, n| match n {
-            Ok(v) => elf + v,
-            _ => match heap.peek() {
-                Some(Reverse(min)) => {
-                    if *min < elf {
-                        heap.pop();
-                        heap.push(Reverse(elf));
-                        println!("{}", elf);
-                        0
-                    } else {
-                        println!("{}", elf);
-                        0
+        .map_while(Result::ok)
+        .map(|line| line.parse::<i32>().ok())
+        .fold(
+            0,
+            |calories_of_current_elf, maybe_calories| match maybe_calories {
+                Some(calories) => calories_of_current_elf + calories,
+                _ => match top_elves_calories.peek() {
+                    Some(Reverse(min)) => {
+                        if *min < calories_of_current_elf {
+                            top_elves_calories.pop();
+                            top_elves_calories.push(Reverse(calories_of_current_elf));
+                            0
+                        } else {
+                            0
+                        }
                     }
-                }
-                _ => elf,
+                    _ => calories_of_current_elf,
+                },
             },
-        });
+        );
 
-    let calories = heap.iter().fold(0, |a, b| a + b.0);
-    println!("{} Elves with most calories: {}", x, calories);
+    let calories = top_elves_calories.iter().fold(0, |a, b| a + b.0);
+    println!(
+        "The {} elves with the most calories carry {}",
+        number_of_top_elves, calories
+    );
     Ok(())
 }
