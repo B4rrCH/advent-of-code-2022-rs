@@ -34,7 +34,7 @@ impl Directory {
         let mut res = HashMap::new();
         res.insert(path.into(), self);
 
-        for (name, sub_dir) in (&self.sub_directories).iter() {
+        for (name, sub_dir) in self.sub_directories.iter() {
             let sub_path = format!("{}/{}", path, name.as_str());
             let sub_dirs = sub_dir.get_sub_directories(sub_path.as_str());
             res.extend(sub_dirs);
@@ -78,8 +78,8 @@ pub fn run(_args: &[String]) -> std::io::Result<()> {
     let all_directories = root.get_sub_directories("");
 
     let sizes_of_directories: Vec<usize> = all_directories
-        .iter()
-        .map(|(_, dir)| dir.get_inclusive_size())
+        .values()
+        .map(|dir| dir.get_inclusive_size())
         .collect();
 
     let max_size_for_part_1 = 100_000;
