@@ -44,7 +44,8 @@ impl Rope {
         while rope.is_some() {
             let tmp_rope = rope.as_mut().unwrap();
 
-            if !tmp_rope.position.move_towards(head) {
+            let rope_moved = tmp_rope.position.move_towards(head);
+            if !rope_moved {
                 return;
             }
 
