@@ -90,16 +90,16 @@ impl TryFrom<String> for Movement {
                     "D" => Ok(Direction::Down),
                     "L" => Ok(Direction::Left),
                     "R" => Ok(Direction::Right),
-                    _ => Err(Error::from(ErrorKind::InvalidInput)),
+                    _ => Err(Error::from(ErrorKind::InvalidData)),
                 }?;
                 let count = number
                     .parse::<usize>()
-                    .map_err(|err| Error::new(ErrorKind::Other, err))?;
+                    .map_err(|err| Error::new(ErrorKind::InvalidData, err))?;
 
                 Ok(Movement { direction, count })
             }
 
-            _ => Err(Error::from(ErrorKind::InvalidInput)),
+            _ => Err(Error::from(ErrorKind::InvalidData)),
         }
     }
 }
