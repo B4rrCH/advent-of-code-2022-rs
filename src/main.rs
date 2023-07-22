@@ -8,6 +8,7 @@ mod day07;
 mod day08;
 mod day09;
 mod day10;
+mod day11;
 
 use crate::day01::run as run01;
 use crate::day02::run as run02;
@@ -19,6 +20,7 @@ use crate::day07::run as run07;
 use crate::day08::run as run08;
 use crate::day09::run as run09;
 use crate::day10::run as run10;
+use crate::day11::run as run11;
 
 use std::env;
 
@@ -40,6 +42,7 @@ fn main() -> std::io::Result<()> {
         Some(8) => run08(args_for_day),
         Some(9) => run09(args_for_day),
         Some(10) => run10(args_for_day),
+        Some(11) => run11(args_for_day),
         _ => {
             panic!("Day {:?} not implemented", day);
         }
