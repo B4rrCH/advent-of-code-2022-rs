@@ -59,17 +59,17 @@ fn part1(reader: BufReader<File>) -> std::io::Result<()> {
             Instruction::Noop => {
                 cycle += 1;
                 if cycle % 40 == 20 {
-                    sum_of_signal_strenghts += cycle as i32 * register_x;
+                    sum_of_signal_strenghts += cycle * register_x;
                 }
             }
             Instruction::Add(augend) => {
                 cycle += 1;
                 if cycle % 40 == 20 {
-                    sum_of_signal_strenghts += cycle as i32 * register_x;
+                    sum_of_signal_strenghts += cycle * register_x;
                 }
                 cycle += 1;
                 if cycle % 40 == 20 {
-                    sum_of_signal_strenghts += cycle as i32 * register_x;
+                    sum_of_signal_strenghts += cycle * register_x;
                 }
                 register_x += augend;
             }
@@ -120,7 +120,7 @@ impl CathodRayTube {
     fn new(lines: Lines<BufReader<File>>) -> CathodRayTube {
         CathodRayTube {
             cycle: 0,
-            pixels: [['.' as u8; DISPLAY_WIDTH]; DISPLAY_HEIGHT],
+            pixels: [[b'.'; DISPLAY_WIDTH]; DISPLAY_HEIGHT],
             sprite: Sprite {
                 register_x: 1,
                 next_add: None,
@@ -139,9 +139,9 @@ impl CathodRayTube {
         let line_read = self.sprite.try_tick()?;
         if line_read {
             if (register_x - x as i32).abs() <= 1 {
-                self.pixels[y][x] = '#' as u8;
+                self.pixels[y][x] = b'#';
             } else {
-                self.pixels[y][x] = '.' as u8;
+                self.pixels[y][x] = b'.';
             }
         }
 
@@ -171,7 +171,7 @@ fn draw_display(display: &[[u8; DISPLAY_WIDTH]; DISPLAY_HEIGHT]) -> std::io::Res
     let mut out = std::io::stdout();
     for row in display {
         out.write_all(row)?;
-        out.write_all(&['\n' as u8])?;
+        out.write_all(b"\n")?;
     }
     out.flush()?;
     Ok(())
